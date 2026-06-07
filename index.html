@@ -1,1 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
+<title>Carte France TGV</title>
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+body{
+margin:0;
+font-family:Arial,sans-serif;
+}
+
+#map{
+height:100vh;
+width:100%;
+}
+</style>
+</head>
+
+<body>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+const map = L.map('map').setView([46.5,2.5],6);
+
+L.tileLayer(
+'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+{
+maxZoom:19
+}
+).addTo(map);
+
+const villes = [
+{
+nom:"La Rochelle",
+lat:46.1603,
+lng:-1.1511,
+tgv:"2h20",
+mer:"10 min"
+},
+{
+nom:"Le Mans",
+lat:48.0061,
+lng:0.1996,
+tgv:"55 min",
+mer:"1h45"
+},
+{
+nom:"Tours",
+lat:47.3941,
+lng:0.6848,
+tgv:"1h05",
+mer:"2h30"
+}
+];
+
+villes.forEach(ville => {
+
+L.marker([ville.lat, ville.lng])
+.addTo(map)
+.bindPopup(`
+<h3>${ville.nom}</h3>
+<p>TGV Paris : ${ville.tgv}</p>
+<p>Côte : ${ville.mer}</p>
+`);
+
+});
+
+</script>
+
+</body>
+</html>
