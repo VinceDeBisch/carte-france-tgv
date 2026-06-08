@@ -14,6 +14,17 @@ body{
 margin:0;
 font-family:Arial,sans-serif;
 }
+    #panel{
+position:absolute;
+top:10px;
+left:10px;
+z-index:1000;
+background:white;
+padding:15px;
+border-radius:8px;
+box-shadow:0 0 10px rgba(0,0,0,0.2);
+width:260px;
+}
 
 #map{
 height:100vh;
@@ -23,7 +34,49 @@ width:100%;
 </head>
 
 <body>
+<div id="panel">
 
+<label>
+Paris → TGV ≤
+<span id="tgvValue">120</span> min
+</label>
+
+<input
+type="range"
+id="tgvFilter"
+min="0"
+max="240"
+value="120">
+
+<br><br>
+
+<label>
+Ville → Gare ≤
+<span id="gareValue">60</span> min
+</label>
+
+<input
+type="range"
+id="gareFilter"
+min="0"
+max="120"
+value="60">
+
+<br><br>
+
+<label>
+Ville → Côte ≤
+<span id="coteValue">60</span> min
+</label>
+
+<input
+type="range"
+id="coteFilter"
+min="0"
+max="120"
+value="60">
+
+</div>
 <div id="map"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -39,25 +92,92 @@ maxZoom:19
 }
 ).addTo(map);
 
+let allCities = [];
+let markers = [];
+
 fetch("villes.json")
 .then(response => response.json())
 .then(villes => {
 
-    villes.forEach(ville => {
+    allCities = villes;
 
-        L.marker([ville.lat, ville.lng])
-        .addTo(map)
-        .bindPopup(`
-            <h3>${ville.nom}</h3>
-            <p>Paris → TGV : ${ville.tgvParis} min</p>
-            <p>Ville → Gare : ${ville.gare} min</p>
-            <p>Ville → Côte : ${ville.cote} min</p>
-        `);
-
-    });
+    updateMap();
 
 });
 
+function updateMap(){
+
+    markers.forEach(marker => map.removeLayer(marker));
+
+    markers = [];
+
+    const tgvMax =
+        Number(document.getElementById("tgvFilter").value);
+
+    const gareMax =
+        Number(document.getElementById("gareFilter").value);
+
+    const coteMax =
+        Number(document.getElementById("coteFilter").value);
+
+    allCities
+        .filter(ville =>
+            ville.tgvParis <= tgvMax &&
+            ville.gare <= gareMax &&
+            ville.cote <= coteMax
+        )
+        .forEach(ville => {
+
+            const marker =
+                L.marker([ville.lat, ville.lng])
+                .addTo(map)
+                .bindPopup(`
+                    <h3>${ville.nom}</h3>
+                    <p>Paris → TGV : ${ville.tgvParis} min</p>
+                    <p>Ville → Gare : ${ville.gare} min</p>
+                    <p>Ville → Côte : ${ville.cote} min</p>
+                `);
+
+            markers.push(marker);
+
+        });
+
+}
+    document
+.getElementById("tgvFilter")
+.addEventListener("input", e => {
+
+    document
+    .getElementById("tgvValue")
+    .textContent = e.target.value;
+
+    updateMap();
+
+});
+
+document
+.getElementById("gareFilter")
+.addEventListener("input", e => {
+
+    document
+    .getElementById("gareValue")
+    .textContent = e.target.value;
+
+    updateMap();
+
+});
+
+document
+.getElementById("coteFilter")
+.addEventListener("input", e => {
+
+    document
+    .getElementById("coteValue")
+    .textContent = e.target.value;
+
+    updateMap();
+
+});
 </script>
 
 </body>
