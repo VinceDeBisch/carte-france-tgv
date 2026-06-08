@@ -39,39 +39,22 @@ maxZoom:19
 }
 ).addTo(map);
 
-const villes = [
-{
-nom:"La Rochelle",
-lat:46.1603,
-lng:-1.1511,
-tgv:"2h20",
-mer:"10 min"
-},
-{
-nom:"Le Mans",
-lat:48.0061,
-lng:0.1996,
-tgv:"55 min",
-mer:"1h45"
-},
-{
-nom:"Tours",
-lat:47.3941,
-lng:0.6848,
-tgv:"1h05",
-mer:"2h30"
-}
-];
+fetch("villes.json")
+.then(response => response.json())
+.then(villes => {
 
-villes.forEach(ville => {
+    villes.forEach(ville => {
 
-L.marker([ville.lat, ville.lng])
-.addTo(map)
-.bindPopup(`
-<h3>${ville.nom}</h3>
-<p>TGV Paris : ${ville.tgv}</p>
-<p>Côte : ${ville.mer}</p>
-`);
+        L.marker([ville.lat, ville.lng])
+        .addTo(map)
+        .bindPopup(`
+            <h3>${ville.nom}</h3>
+            <p>Paris → TGV : ${ville.tgvParis} min</p>
+            <p>Ville → Gare : ${ville.gare} min</p>
+            <p>Ville → Côte : ${ville.cote} min</p>
+        `);
+
+    });
 
 });
 
