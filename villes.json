@@ -1,0 +1,18 @@
+[
+  {
+    "nom": "Le Mans",
+    "lat": 48.0061,
+    "lng": 0.1996,
+    "tgvParis": 55,
+    "gare": 5,
+    "cote": 105
+  },
+  {
+    "nom": "Tours",
+    "lat": 47.3941,
+    "lng": 0.6848,
+    "tgvParis": 65,
+    "gare": 10,
+    "cote": 150
+  }
+]
