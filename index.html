@@ -24,6 +24,7 @@ padding:15px;
 border-radius:8px;
 box-shadow:0 0 10px rgba(0,0,0,0.2);
 width:260px;
+        <h3>Villes trouvées : <span id="count">0</span></h3>
 }
 
 #map{
@@ -126,6 +127,16 @@ function updateMap(){
             ville.gare <= gareMax &&
             ville.cote <= coteMax
         )
+       const filteredCities = allCities.filter(ville =>
+    ville.tgvParis <= tgvMax &&
+    ville.gare <= gareMax &&
+    ville.cote <= coteMax
+);
+
+document.getElementById("count").textContent =
+    filteredCities.length;
+
+filteredCities.forEach(ville => {
         .forEach(ville => {
 
             const marker =
